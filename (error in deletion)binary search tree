@@ -1,0 +1,415 @@
+#include"stack.hpp"
+#include"queueasll.hpp"
+
+
+template<class t>
+class bstnode{
+	public :
+		t data;
+		bstnode<t>* left;
+		bstnode<t>* right;
+		bstnode<t>(t d=0,bstnode<t>* l=NULL,bstnode<t>* r=NULL)
+		{
+			data=d;
+			left=l;
+			right=r;
+		}
+};
+template<class t>
+class bst{
+	public :
+		bstnode<t>* root;
+		bst()
+		{
+			root=NULL;
+		}
+		void insert(t data)
+		{
+      		if(root==NULL)
+			{
+        		root=new bstnode<t>(data);
+        		return;
+      		}
+      		bstnode<t>  *prev,*p;
+      		p=root;
+      		while(p!=NULL)
+			{
+       			prev=p;
+        		if(p->data > data)
+				{
+            		p=p->left;
+        		}
+        		else
+				{
+
+            		p=p->right;
+        		}
+      		}
+
+        	if(data > prev->data)
+			{
+            	prev->right=new bstnode<t>(data);
+        	}
+        	else
+			{
+            	prev->left=new bstnode<t>(data);
+        	}
+        }
+		bool search(t data)
+		{
+			if(root==NULL)
+			{
+				cout<<"tree is empty \n";
+				return false;
+			}
+			bstnode<t> *p=root;
+			while(p!=NULL)
+			{
+				if(p->data==data)
+				{
+					return true;
+				}
+				else if(data<p->data)
+				{
+					p=p->left;
+				}
+				else
+				{
+					p=p->right;
+				}
+			}
+			return false;
+		}
+		//breath first transversal
+		void bft()
+		{
+			llist<bstnode<t>*> queue;
+			bstnode<t>* p=root;
+			if(p!=NULL)
+			{
+				queue.enqueue(p);
+				while(!queue.empty())
+				{
+					bstnode<t>* temp=queue.front();
+					queue.dequeue();
+					cout<<temp->data<<" ";
+					if(temp->left != NULL)
+					{
+						queue.enqueue(temp->left);
+					}
+					if(temp->right != NULL)
+					{
+						queue.enqueue(temp->right);
+					}
+				}
+				cout<<"\n";
+			
+			}
+		}
+		
+		// recurcive depth first search 
+		void preorder()
+		{
+			preorder(root);
+			cout<<"\n";
+		}
+		void preorder(bstnode<t>* root)
+		{
+			if(root==NULL)
+			{
+				return;
+			}
+			cout<<root->data<<" ";
+			preorder(root->left);
+			preorder(root->right);
+		}
+		void inorder()
+		{
+			inorder(root);
+			cout<<"\n";
+		}	
+		void inorder(bstnode<t>* root)
+		{
+			if(root==NULL)
+			{
+				return;
+			}
+			inorder(root->left);
+			cout<<root->data<<" ";
+			inorder(root->right);
+		}
+		void postorder()
+		{
+			postorder(root);
+			cout<<"\n";
+		}
+		void postorder(bstnode<t>* root)
+		{
+			if(root==NULL)
+			{
+				return;
+			}
+			postorder(root->left);
+			postorder(root->right);
+			cout<<root->data<<" ";
+		}
+		//itretetive depth first transversal
+		void ipreorder()
+		{
+			stack<bstnode<t>*> s;
+			bstnode<t>* p=root;
+			if(p!=NULL)
+			{
+				s.push(p);
+				while(!s.empty())
+				{
+					p=s.tos();
+					s.pop();
+					cout<<p->data<<" ";
+					if(p->right != NULL)
+					{
+						s.push(p->right);
+					}
+					if(p->left !=NULL)
+					{
+						s.push(p->left);
+					}
+				}
+			}
+			cout<<"\n";
+		}
+		void iinorder()
+		{
+			bstnode<t>* p=root;
+			stack<bstnode<t>*> s;
+			while(p!=NULL)
+			{
+				while(p!=NULL)
+				{
+					if(p->right!=NULL)
+					{
+						s.push(p->right);
+					}
+					s.push(p);
+					p=p->left;
+				}
+				p=s.tos();
+				s.pop();
+				while(!s.empty()&&p->right == NULL)
+				{
+					cout<<p->data<<" ";
+					p=s.tos();
+					s.pop();
+				}
+				cout<<p->data<<" ";
+				if(!s.empty())
+				{
+					p=s.tos();
+					s.pop();
+				}
+				else
+				{
+					p=NULL;
+				}
+			}
+		}
+		void ipostorder()
+		{
+			bstnode<t>* p=root,*q=root;
+			stack<bstnode<t>*> s;
+			while (p != NULL) {
+				for ( ; p->left != NULL; p = p->left)
+				s.push(p);
+			 	while (p->right == NULL || p->right == q) {
+			 		cout<<p->data<<" ";
+			 		q = p;
+			 		if (s.empty())
+			 			return;
+			 		p = s.tos();
+			 		s.pop();
+			 	}
+				s.push(p);
+			 	p = p->right;
+			}
+		}
+		
+		//height
+		int height()
+		{
+			return height(root);
+		}
+		int height(bstnode<t>* root)
+		{
+			if(root==NULL)
+			{
+				return 0;
+			}
+			int lh=height(root->left);
+			int rh=height(root->right);
+			return max(lh,rh)+1;
+		}
+		//mirror
+		void mirror()
+		{
+			mirror(root);
+			cout<<"\n";
+		}
+		void mirror(bstnode<t>* root)
+		{
+			if(root==NULL)
+			{
+				return;
+			}
+			mirror(root->left);
+			mirror(root->right);
+			t temp=root->left->data;
+			root->left->data=root->right->data;
+			root->right=temp;
+		}
+		//deletion 
+		void findAndDeleteByMerging(t el) {
+ 			bstode<t> *node = root, *prev = NULL;
+ 			while (node != NULL) {
+ 				if (node->el == el)
+ 					break;
+ 				prev = node;
+ 				if (el < node->el)
+ 					node = node->left;
+ 				else node = node->right;
+ 			}
+ 			if (node != NULL && node->el == el)
+ 				if (node == root)
+ 					deleteByMerging(root);
+ 				else if (prev->left == node)
+ 					deleteByMerging(prev->left);
+ 				else deleteByMerging(prev->right);
+ 			else if (root != NULL)
+ 				cout << "element" << el << "is not in the tree\n";
+ 			else cout << "the tree is empty\n";
+		}
+		void deleteByMerging(bstnode<t>* node) {
+			bstnode<t> *tmp = node;
+ 			if (node != NULL) {
+ 				if (!node->right) // node has no right child: its left
+ 					node = node->left; // child (if any) is attached to its
+										 // parent;
+ 				else if (node->left == NULL) // node has no left child: its right
+ 					node = node->right; // child is attached to its parent;
+ 				else { // be ready for merging subtrees;
+ 					tmp = node->left; // 1. move left
+ 					while (tmp->right != 0)// 2. and then right as far as
+ 												// possible;
+ 						tmp = tmp->right;
+ 						tmp->right = // 3. establish the link between
+						 node->right; // the rightmost node of the left
+ // subtree and the right subtree;
+ tmp = node; // 4.
+ node = node->left; // 5.
+ }
+ delete tmp; // 6.
+ }
+}
+      void BST<T>::deleteByCopying(BSTNode<T>*& node) {
+ BSTNode<T> *previous, *tmp = node;
+ if (node->right == 0) // node has no right child;
+ node = node->left;
+ else if (node->left == 0) // node has no left child;
+ node = node->right;
+ else {
+ tmp = node->left; // node has both children;
+ previous = node; // 1.
+ while (tmp->right != 0) { // 2.
+ previous = tmp;
+ tmp = tmp->right;
+ }
+ node->el = tmp->el; // 3.
+ if (previous == node)
+ previous ->left = tmp->left;
+ else previous ->right = tmp->left; // 4.
+ }
+ delete tmp; // 5.
+}
+};
+
+
+int main()
+{
+	bst<int> ob;
+	int choice;
+	int data;
+	bool flag=true;
+	do{
+		cout<<"\n";
+		cout<<"1: to insert an element \n";
+		cout<<"2: to search an element \n";
+		cout<<"3: to get breath first transversal \n";
+		cout<<"4: to get preorder(rec.) \n";
+		cout<<"5: to get ineorder(rec.) \n";
+		cout<<"6: to get postorder(rec.) \n";
+		cout<<"7: to get preorder(itr.) \n";
+		cout<<"8: to get ineorder(itr.) \n";
+		cout<<"9: to get postorder(itr.) \n";
+		cout<<"10: to get height \n";
+		cout<<"11: to mirror the tree \n";
+		cout<<"12: to delete by merge \n";
+		cout<<"13: to delete by copy \n";
+		cout<<"14: to check wether balanced or not \n";
+		cout<<"0: to exit \n";
+		cin>>choice;
+		cout<<"\n";
+		switch(choice )
+		{
+			case 0 :
+				flag=false;
+				break;
+			case 1 :
+				cout<<"enter data to enter into tree \n";
+				cin>>data;
+				ob.insert(data);
+				break;
+			case 2 :
+				cout<<"enter data to search into tree \n";
+				cin>>data;
+				if(!ob.search(data))
+				{
+					cout<<"element not found in tree \n";
+				}
+				else
+				{
+					cout<<"element is present in tree \n";
+				}
+				break;
+			case 3 :
+				ob.bft();
+				break;
+			case 4 :
+				ob.preorder();
+				break;
+			case 5 :
+				ob.inorder();
+				break;
+			case 6 :
+				ob.postorder();
+				break;
+			case 7 :
+				ob.ipreorder();
+				break;
+			case 8 :
+				ob.iinorder();
+				break;
+			case 9 :
+				ob.ipostorder();
+				break;
+			case 10 :
+				cout<<"height of tree : "<<ob.height()<<"\n";
+				break;
+			case 12:
+				cout<<"mirrored tree \n";
+				break;
+			default :
+				cout<<"you have entered a wrong choice \n";
+		}
+	}
+	while(flag);
+	return 0;
+}
