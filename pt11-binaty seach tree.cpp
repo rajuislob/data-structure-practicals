@@ -4,6 +4,7 @@
 
 template<class T>
 class node{
+	public:
     T data;
     node<T>*left;
     node<T>*right;
@@ -19,8 +20,6 @@ class node{
         left=NULL;
         right=NULL;
     }
-    template<class U>
-    friend class bst;
 };
 
 template<class T>
