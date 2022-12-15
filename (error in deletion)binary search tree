@@ -290,45 +290,41 @@ class bst{
 		void deleteByMerging(bstnode<t>* node) {
 			bstnode<t> *tmp = node;
  			if (node != NULL) {
- 				if (!node->right) // node has no right child: its left
- 					node = node->left; // child (if any) is attached to its
-										 // parent;
- 				else if (node->left == NULL) // node has no left child: its right
- 					node = node->right; // child is attached to its parent;
- 				else { // be ready for merging subtrees;
- 					tmp = node->left; // 1. move left
- 					while (tmp->right != 0)// 2. and then right as far as
- 												// possible;
+ 				if (!node->right) 
+ 					node = node->left; 
+ 				else if (node->left == NULL) 
+ 					node = node->right; 
+ 				else {
+ 					tmp = node->left; 
+ 					while (tmp->right != NULL)
  						tmp = tmp->right;
- 						tmp->right = // 3. establish the link between
-						 node->right; // the rightmost node of the left
- // subtree and the right subtree;
- tmp = node; // 4.
- node = node->left; // 5.
- }
- delete tmp; // 6.
- }
-}
-      void BST<T>::deleteByCopying(BSTNode<T>*& node) {
- BSTNode<T> *previous, *tmp = node;
- if (node->right == 0) // node has no right child;
- node = node->left;
- else if (node->left == 0) // node has no left child;
- node = node->right;
- else {
- tmp = node->left; // node has both children;
- previous = node; // 1.
- while (tmp->right != 0) { // 2.
- previous = tmp;
- tmp = tmp->right;
- }
- node->el = tmp->el; // 3.
- if (previous == node)
- previous ->left = tmp->left;
- else previous ->right = tmp->left; // 4.
- }
- delete tmp; // 5.
-}
+ 					tmp->right = node->right; 
+ 					tmp = node; 
+ 					node = node->left; 
+ 				}
+ 				delete tmp; 
+ 			}
+		}
+      	void deleteByCopying(bstnode<t>* node) {
+ 			bstnode<t> *previous, *tmp = node;
+ 			if (node->right == 0) 
+ 				node = node->left;
+ 			else if (node->left == 0) 
+ 				node = node->right;
+ 			else {
+ 				tmp = node->left; // node has both children;
+ 				previous = node; // 1.
+ 				while (tmp->right != 0) { // 2.
+ 					previous = tmp;
+ 					tmp = tmp->right;
+ 				}
+ 				node->el = tmp->el; // 3.
+ 				if (previous == node)
+ 					previous ->left = tmp->left;
+ 				else previous ->right = tmp->left; // 4.
+ 			}
+ 			delete tmp; // 5.
+		}
 };
 
 
